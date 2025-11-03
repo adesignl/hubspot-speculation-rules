@@ -1,0 +1,40 @@
+{# 
+ # HubSpot Speculation Rules API
+ # Add Speculation Rules API for prefetching and prerendering
+ # This code should be placed in your HubSpot theme's header template or theme settings
+ #}
+
+{% set speculation_rules = {
+  "prefetch": [
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "href_matches": "/*.zip" } },
+          { "not": { "href_matches": "/*.pdf" } },
+          { "not": { "selector_matches": ".no-prefetch" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }
+  ],
+  "prerender": [
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "selector_matches": ".no-prerender" } }
+        ]
+      },
+      "eagerness": "conservative"
+    }
+  ]
+} %}
+
+{% require_head %}
+<script type="speculationrules">
+  {{ speculation_rules|tojson }}
+</script>
+{% end_require_head %}
